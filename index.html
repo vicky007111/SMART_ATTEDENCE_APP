@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebAuthn Fingerprint Demo</title>
+</head>
+<body>
+  <h1>Fingerprint / Biometric Login</h1>
+  <button onclick="authenticate()">Authenticate with Biometrics</button>
+
+  <script>
+    async function authenticate() {
+      if (!window.PublicKeyCredential) {
+        alert("WebAuthn not supported in this browser.");
+        return;
+      }
+
+      try {
+        const publicKey = {
+          challenge: Uint8Array.from("random_challenge_string", c => c.charCodeAt(0)),
+          timeout: 60000,
+          userVerification: "preferred",
+          allowCredentials: [],
+        };
+
+        const credential = await navigator.credentials.get({ publicKey });
+        console.log("Authentication Success!", credential);
+        alert("✅ Authentication successful!");
+      } catch (err) {
+        console.error("Authentication failed:", err);
+        alert("❌ Authentication failed or canceled.");
+      }
+    }
+  </script>
+</body>
+</html>
